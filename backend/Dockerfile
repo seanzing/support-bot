@@ -1,9 +1,12 @@
 FROM python:3.11-slim
 WORKDIR /app
+
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
-COPY pyproject.toml uv.lock ./
+
+# Railway builds from repo root, so copy backend/ contents into /app
+COPY backend/ .
+
 RUN uv sync --frozen --no-dev
-COPY . .
 
 # Railway uses dynamic PORT, Docker Compose uses 8001
 ENV PORT=8001
