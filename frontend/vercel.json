@@ -6,7 +6,7 @@
   "rewrites": [
     { "source": "/widget.js", "destination": "/widget.js" },
     { "source": "/widget-test.html", "destination": "/widget-test.html" },
-    { "source": "/support/:path*", "destination": "https://zing-customer-support-agent-production.up.railway.app/support/:path*" },
+    { "source": "/support/:path*", "destination": "https://support-bot-production-6202.up.railway.app/support/:path*" },
     { "source": "/:path*", "destination": "/index.html" }
   ],
   "headers": [
