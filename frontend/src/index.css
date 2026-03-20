@@ -1,0 +1,397 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===================================
+   ZING SUPPORT AGENT - BRAND THEME
+   Stripe-Inspired Design System
+   Primary: #635BFF (ZING Purple)
+   =================================== */
+
+@layer base {
+  :root {
+    /* ZING Light Mode - Clean & Professional */
+    --background: 0 0% 100%;           /* Pure white */
+    --foreground: 220 13% 18%;         /* gray-900 #1F2937 */
+
+    --card: 0 0% 100%;                 /* White cards */
+    --card-foreground: 221 13% 22%;    /* gray-800 #374151 */
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 18%;
+
+    /* ZING Primary - Stripe Purple #635BFF */
+    --primary: 243 85% 68%;            /* #635BFF */
+    --primary-foreground: 0 0% 100%;   /* White text on primary */
+
+    --secondary: 220 14% 96%;          /* gray-100 #F3F4F6 */
+    --secondary-foreground: 221 13% 22%;
+
+    --muted: 220 14% 96%;              /* gray-100 */
+    --muted-foreground: 220 9% 46%;    /* gray-600 #4B5563 */
+
+    /* ZING Accent - Light purple tint */
+    --accent: 226 100% 94%;            /* #E0E7FF */
+    --accent-foreground: 243 75% 59%;  /* #4F46E5 darker purple */
+
+    --destructive: 0 72% 51%;          /* #DC2626 */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;             /* gray-200 #E5E7EB */
+    --input: 220 13% 91%;
+    --ring: 243 85% 68%;               /* ZING Purple focus ring */
+
+    --radius: 0.5rem;
+
+    /* Chart colors - ZING palette */
+    --chart-1: 243 85% 68%;            /* ZING Purple */
+    --chart-2: 160 84% 39%;            /* emerald-500 */
+    --chart-3: 43 96% 56%;             /* amber-500 */
+    --chart-4: 217 91% 60%;            /* blue-500 */
+    --chart-5: 0 72% 51%;              /* red-600 */
+
+    color-scheme: light;
+  }
+
+  .dark {
+    /* ZING Dark Mode - Deep Navy like Linear/Stripe */
+    --background: 230 84% 5%;          /* #0a0e27 deep navy */
+    --foreground: 0 0% 98%;            /* #FAFAFA near white */
+
+    --card: 240 6% 10%;                /* #18181B zinc-900 */
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 6% 10%;
+    --popover-foreground: 0 0% 98%;
+
+    /* ZING Primary - Indigo for dark mode */
+    --primary: 239 84% 67%;            /* #6366F1 indigo-500 */
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 240 4% 16%;           /* #27272A zinc-800 */
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 4% 16%;               /* zinc-800 */
+    --muted-foreground: 240 5% 65%;    /* zinc-400 #A1A1AA */
+
+    --accent: 240 4% 16%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 63% 31%;          /* Muted red for dark mode */
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 4% 16%;              /* zinc-800 */
+    --input: 240 4% 16%;
+    --ring: 239 84% 67%;               /* Indigo focus ring */
+
+    /* Chart colors - Lighter for dark mode */
+    --chart-1: 239 84% 74%;            /* Lighter indigo */
+    --chart-2: 160 72% 60%;            /* emerald-400 */
+    --chart-3: 43 96% 65%;             /* amber-400 */
+    --chart-4: 217 91% 65%;            /* blue-400 */
+    --chart-5: 0 84% 60%;              /* red-500 */
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* shadcn border radius variable */
+* {
+  --radius: 0.5rem;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+#root {
+  height: 100%;
+}
+
+/* Advanced Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes slide-in-bottom {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animation Utilities */
+.animate-fade-in {
+  animation: fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-slide-in-bottom {
+  animation: slide-in-bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)) 0%,
+    hsl(var(--muted-foreground) / 0.1) 50%,
+    hsl(var(--muted)) 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Enhanced Shadow Utilities */
+.shadow-subtle {
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.03), 0 1px 3px 0 rgb(0 0 0 / 0.06);
+}
+
+.shadow-card {
+  box-shadow: 0 2px 8px -2px rgb(0 0 0 / 0.08), 0 4px 12px -2px rgb(0 0 0 / 0.04);
+}
+
+.shadow-elevated {
+  box-shadow: 0 8px 16px -4px rgb(0 0 0 / 0.1), 0 4px 8px -2px rgb(0 0 0 / 0.06);
+}
+
+.shadow-high {
+  box-shadow: 0 16px 32px -8px rgb(0 0 0 / 0.12), 0 8px 16px -4px rgb(0 0 0 / 0.08);
+}
+
+/* Dark mode shadow adjustments */
+.dark .shadow-subtle {
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.4), 0 1px 3px 0 rgb(0 0 0 / 0.5);
+}
+
+.dark .shadow-card {
+  box-shadow: 0 2px 8px -2px rgb(0 0 0 / 0.5), 0 4px 12px -2px rgb(0 0 0 / 0.4);
+}
+
+.dark .shadow-elevated {
+  box-shadow: 0 8px 16px -4px rgb(0 0 0 / 0.6), 0 4px 8px -2px rgb(0 0 0 / 0.5);
+}
+
+.dark .shadow-high {
+  box-shadow: 0 16px 32px -8px rgb(0 0 0 / 0.7), 0 8px 16px -4px rgb(0 0 0 / 0.6);
+}
+
+/* Glass Morphism Effect */
+.glass {
+  background: hsl(var(--background) / 0.7);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+}
+
+.glass-strong {
+  background: hsl(var(--background) / 0.85);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+/* Smooth Transitions */
+.transition-smooth {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.transition-bounce {
+  transition: transform 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Interactive States */
+.interactive {
+  @apply transition-all duration-200 ease-out;
+  @apply hover:scale-[1.02] active:scale-[0.98];
+}
+
+.interactive-subtle {
+  @apply transition-all duration-200 ease-out;
+  @apply hover:scale-[1.01] active:scale-[0.99];
+}
+
+/* Gradient Accents */
+.gradient-accent {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--primary) / 0.1) 0%,
+    hsl(var(--accent) / 0.05) 100%
+  );
+}
+
+.gradient-border {
+  position: relative;
+  background: hsl(var(--card));
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    hsl(var(--primary) / 0.2),
+    transparent 50%,
+    hsl(var(--accent) / 0.1)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* ZING Brand Status Colors */
+.status-success {
+  @apply text-emerald-600 dark:text-emerald-400;
+}
+
+.status-warning {
+  @apply text-amber-500 dark:text-amber-400;
+}
+
+.status-error {
+  @apply text-red-600 dark:text-red-500;
+}
+
+.status-neutral {
+  @apply text-gray-500 dark:text-gray-400;
+}
+
+/* ZING Purple Gradient */
+.zing-gradient {
+  background: linear-gradient(135deg, #635BFF 0%, #6366F1 50%, #4F46E5 100%);
+}
+
+.zing-gradient-text {
+  background: linear-gradient(135deg, #635BFF 0%, #6366F1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ZING Primary Button Glow */
+.zing-glow {
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+}
+
+.zing-glow:hover {
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+}
+
+/* ChatKit Override - Remove padding, width constraints, and margin-auto centering */
+.block.h-full.w-full {
+  padding: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+}
+
+.block.h-full.w-full > * {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+}
+
+[data-chatkit-root] {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+}
+
+[data-chatkit-root] > div {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+}
+
+/* Target all potential ChatKit container elements */
+[class*="chatkit"] {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  max-width: none !important;
+}
+
+/* Remove any centering containers */
+[class*="chatkit"] > div,
+[class*="chatkit"] > * {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  max-width: none !important;
+}
+

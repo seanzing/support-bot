@@ -1,0 +1,103 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+/backend/lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.venv/
+venv/
+ENV/
+env/
+
+# Node
+node_modules/
+dist/
+.cache/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+lerna-debug.log*
+.DS_Store
+*.local
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# OS
+Thumbs.db
+
+# Testing
+coverage/
+.nyc_output/
+.pytest_cache/
+.coverage
+
+# Build outputs
+/backend/dist/
+/frontend/dist/
+/frontend/.vite/
+
+# Logs
+logs/
+*.log
+
+# pnpm
+pnpm-lock.yaml
+
+# Data files
+*.csv
+*.docx
+hubspot_tickets_*.csv
+
+# Claude Code local settings (keep .claude.md config)
+.claude/settings.local.json
+
+# Testing artifacts
+.playwright-mcp/
+
+# Windows artifacts
+nul
+
+# Screenshots
+support-*.png
+*.screenshot.png
+
+# Deployment env files (NEVER commit these!)
+*_ENV.txt
+RAILWAY_*.txt
+VERCEL_*.txt
+.env.production
+
+# Supabase temp files
+supabase/.temp/

@@ -1,0 +1,32 @@
+services:
+  backend:
+    build: ./backend
+    env_file: ./backend/.env
+    environment:
+      # Add CORS for Docker (requests come from localhost:80)
+      - ALLOWED_ORIGINS=http://localhost,http://localhost:80,http://127.0.0.1
+    ports:
+      - "8001:8001"
+    healthcheck:
+      # Use Python instead of curl (curl not in python:3.11-slim)
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/support/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # Relative URLs - nginx proxies to backend
+        VITE_SUPPORT_API_BASE: /support
+        VITE_SUPPORT_CHATKIT_API_URL: /support/chatkit
+        VITE_SUPPORT_CUSTOMER_URL: /support/customer
+        VITE_SUPPORT_TICKET_URL: /support/ticket
+        VITE_SUPPORT_UPLOAD_URL: /support/upload
+        VITE_SUPPORT_CHATKIT_API_DOMAIN_KEY: domain_pk_localhost_dev
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
