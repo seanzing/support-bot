@@ -57,7 +57,6 @@
     widgetUrl: baseUrl,
     position: 'bottom-right',
     buttonColor: '#6366F1',           // ZING Indigo primary
-    buttonColorHover: '#4F46E5',      // ZING Indigo darker
     buttonSize: 60,
     buttonBottom: 50,                 // Distance from bottom (px)
     buttonRight: 35,                  // Distance from right edge (px)
@@ -67,9 +66,44 @@
     zIndex: 999999,
     disclaimer: false,                // Show AI disclaimer (default: hidden)
     disclaimerText: '',               // Custom disclaimer text (uses default if empty)
-    autoOpen: true,                   // Auto-open chat after delay (default: true)
+    autoOpen: false,                  // Auto-open chat after delay (default: false)
     autoOpenDelay: 5000               // Delay before auto-open in ms (default: 5000)
   }, window.ZING_WIDGET_CONFIG || {});
+
+  // ==========================================================================
+  // Color Utilities
+  // ==========================================================================
+
+  function adjustBrightness(hex, percent) {
+    var cleanHex = hex.replace('#', '');
+    var r = parseInt(cleanHex.substring(0, 2), 16);
+    var g = parseInt(cleanHex.substring(2, 4), 16);
+    var b = parseInt(cleanHex.substring(4, 6), 16);
+    var factor = percent / 100;
+    return '#' + Math.round(r * factor).toString(16).padStart(2, '0') +
+                 Math.round(g * factor).toString(16).padStart(2, '0') +
+                 Math.round(b * factor).toString(16).padStart(2, '0');
+  }
+
+  function relativeLuminance(r, g, b) {
+    var rs = r / 255, gs = g / 255, bs = b / 255;
+    var rL = rs <= 0.03928 ? rs / 12.92 : Math.pow((rs + 0.055) / 1.055, 2.4);
+    var gL = gs <= 0.03928 ? gs / 12.92 : Math.pow((gs + 0.055) / 1.055, 2.4);
+    var bL = bs <= 0.03928 ? bs / 12.92 : Math.pow((bs + 0.055) / 1.055, 2.4);
+    return 0.2126 * rL + 0.7152 * gL + 0.0722 * bL;
+  }
+
+  function getContrastTextColor(hex) {
+    var cleanHex = hex.replace('#', '');
+    var r = parseInt(cleanHex.substring(0, 2), 16);
+    var g = parseInt(cleanHex.substring(2, 4), 16);
+    var b = parseInt(cleanHex.substring(4, 6), 16);
+    return relativeLuminance(r, g, b) > 0.4 ? '#000000' : '#ffffff';
+  }
+
+  var hoverColor = adjustBrightness(config.buttonColor, 85);
+  var textColor = getContrastTextColor(config.buttonColor);
+  var tooltipTextColor = getContrastTextColor(hoverColor);
 
   // ==========================================================================
   // Styles
@@ -112,7 +146,7 @@
     '  outline: none;\n' +
     '}\n' +
     '#zing-chat-button:hover {\n' +
-    '  background: ' + config.buttonColorHover + ';\n' +
+    '  filter: brightness(0.85);\n' +
     '  transform: scale(1.1);\n' +
     '  box-shadow: 0 6px 24px rgba(0,0,0,0.25);\n' +
     '}\n' +
@@ -183,8 +217,8 @@
     '  position: fixed;\n' +
     '  ' + (config.position === 'bottom-left' ? 'left' : 'right') + ': ' + (config.buttonRight + config.buttonSize + 10) + 'px;\n' +
     '  bottom: ' + (config.buttonBottom + config.buttonSize / 2 - 12) + 'px;\n' +
-    '  background: #4F46E5;\n' +
-    '  color: #fff;\n' +
+    '  background: ' + hoverColor + ';\n' +
+    '  color: ' + tooltipTextColor + ';\n' +
     '  padding: 8px 14px;\n' +
     '  border-radius: 8px;\n' +
     '  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;\n' +
@@ -203,11 +237,16 @@
     '}\n' +
     '@media (max-width: 480px) {\n' +
     '  #zing-chat-container {\n' +
-    '    width: calc(100vw - 40px);\n' +
-    '    height: calc(100vh - 140px);\n' +
-    '    ' + (config.position === 'bottom-left' ? 'left' : 'right') + ': 20px;\n' +
-    '    bottom: ' + (config.buttonBottom + config.buttonSize + 10) + 'px;\n' +
-    '    border-radius: 12px;\n' +
+    '    position: fixed;\n' +
+    '    top: 0;\n' +
+    '    left: 0;\n' +
+    '    right: 0;\n' +
+    '    bottom: 0;\n' +
+    '    width: 100vw;\n' +
+    '    height: 100vh;\n' +
+    '    height: 100dvh;\n' +
+    '    border-radius: 0;\n' +
+    '    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);\n' +
     '  }\n' +
     '  #zing-chat-tooltip {\n' +
     '    display: none;\n' +
@@ -220,10 +259,10 @@
   // ==========================================================================
 
   // Chat icon SVG
-  var chatIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>';
+  var chatIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="' + textColor + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>';
 
   // Close icon SVG
-  var closeIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+  var closeIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="' + textColor + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
 
   // Create button
   var button = document.createElement('button');
