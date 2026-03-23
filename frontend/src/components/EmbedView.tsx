@@ -1,8 +1,9 @@
 import { useCallback, useState } from "react";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, Phone, PhoneOff } from "lucide-react";
 
 import { ChatKitPanel, THREAD_STORAGE_KEY } from "./ChatKitPanel";
 import type { ColorScheme } from "../hooks/useColorScheme";
+import { useVapiCall } from "../hooks/useVapiCall";
 
 type EmbedViewProps = {
   scheme: ColorScheme;
@@ -17,6 +18,8 @@ type EmbedViewProps = {
  */
 export function EmbedView({ scheme, disclaimer = false, disclaimerText = "" }: EmbedViewProps) {
   const [resetKey, setResetKey] = useState(0);
+  const { status: callStatus, toggleCall } = useVapiCall();
+  const isOnCall = callStatus === "active" || callStatus === "connecting";
 
   const handleThreadChange = useCallback(() => {
     // No-op for embed view
@@ -50,14 +53,47 @@ export function EmbedView({ scheme, disclaimer = false, disclaimerText = "" }: E
             <p className="text-[10px] text-white/70">AI Assistant</p>
           </div>
         </div>
-        <button
-          onClick={handleNewChat}
-          className="p-1.5 rounded-md bg-white/10 hover:bg-white/20 transition-colors"
-          title="Start New Chat"
-        >
-          <RotateCcw className="w-4 h-4" />
-        </button>
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={toggleCall}
+            className={`p-1.5 rounded-md transition-colors ${
+              isOnCall
+                ? "bg-red-500 hover:bg-red-600 animate-pulse"
+                : "bg-white/10 hover:bg-white/20"
+            }`}
+            title={isOnCall ? "End Call" : "Talk to ZING"}
+          >
+            {isOnCall ? (
+              <PhoneOff className="w-4 h-4" />
+            ) : (
+              <Phone className="w-4 h-4" />
+            )}
+          </button>
+          <button
+            onClick={handleNewChat}
+            className="p-1.5 rounded-md bg-white/10 hover:bg-white/20 transition-colors"
+            title="Start New Chat"
+          >
+            <RotateCcw className="w-4 h-4" />
+          </button>
+        </div>
       </header>
+
+      {/* Voice Call Status Banner */}
+      {isOnCall && (
+        <div className="flex-shrink-0 bg-green-600 text-white px-3 py-1.5 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+            <span>{callStatus === "connecting" ? "Connecting..." : "Voice call active"}</span>
+          </div>
+          <button
+            onClick={toggleCall}
+            className="text-white/80 hover:text-white underline"
+          >
+            End call
+          </button>
+        </div>
+      )}
 
       {/* Chat Panel - Full Height */}
       <div className="flex-1 overflow-hidden">
