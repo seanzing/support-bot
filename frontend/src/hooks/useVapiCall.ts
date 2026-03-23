@@ -13,9 +13,27 @@ export function useVapiCall() {
   useEffect(() => {
     const vapi = new Vapi(VAPI_PUBLIC_KEY);
 
-    vapi.on("call-start", () => setStatus("active"));
-    vapi.on("call-end", () => setStatus("idle"));
-    vapi.on("error", () => setStatus("idle"));
+    vapi.on("call-start", () => {
+      console.log("[Vapi] call-start");
+      setStatus("active");
+    });
+    vapi.on("call-end", () => {
+      console.log("[Vapi] call-end");
+      setStatus("idle");
+    });
+    vapi.on("speech-start", () => {
+      console.log("[Vapi] assistant speaking");
+    });
+    vapi.on("speech-end", () => {
+      console.log("[Vapi] assistant stopped speaking");
+    });
+    vapi.on("error", (e) => {
+      console.error("[Vapi] error:", e);
+      setStatus("idle");
+    });
+    vapi.on("message", (msg) => {
+      console.log("[Vapi] message:", msg);
+    });
 
     vapiRef.current = vapi;
 
@@ -25,10 +43,15 @@ export function useVapiCall() {
     };
   }, []);
 
-  const startCall = useCallback(() => {
+  const startCall = useCallback(async () => {
     if (!vapiRef.current || status === "connecting" || status === "active") return;
     setStatus("connecting");
-    vapiRef.current.start(VAPI_ASSISTANT_ID);
+    try {
+      await vapiRef.current.start(VAPI_ASSISTANT_ID);
+    } catch (e) {
+      console.error("[Vapi] start failed:", e);
+      setStatus("idle");
+    }
   }, [status]);
 
   const endCall = useCallback(() => {
