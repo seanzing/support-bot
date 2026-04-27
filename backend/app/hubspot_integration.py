@@ -20,7 +20,7 @@ from .email_templates import build_html_email, build_plain_text_email
 # SMTP2GO Configuration
 SMTP2GO_API_URL = "https://api.smtp2go.com/v3/email/send"
 SMTP2GO_API_KEY = os.getenv("SMTP2GO_API_KEY", "")  # Required: Get from https://smtp2go.com
-SMTP2GO_SENDER = "nathan@zing-work.com"   # Sender address for outgoing emails
+SMTP2GO_SENDER = "chatbot@zing-work.com"  # Sender address for outgoing emails (must be verified in SMTP2GO)
 SUPPORT_INBOX = "support@zing-work.com"   # Inbox that receives ALL support tickets (including cancellations)
 
 
@@ -191,29 +191,24 @@ class HubSpotTicketManager:
         # Send via SMTP2GO API
 
         try:
-            # Build sender with customer identity in display name
-            # Format: "Customer Name (customer@email.com)" <nathan@zing-work.com>
-            # This allows support agents to see WHO the ticket is from at a glance
-            # Using formataddr() ensures proper RFC 5322 escaping of special characters
-            if customer_name and customer_name != "Guest":
-                display_name = f"{customer_name} ({customer_email})"
-            else:
-                display_name = customer_email
-
-            # formataddr properly escapes quotes and special chars in display name
+            # Display name must not contain a different email address — SMTP2GO's
+            # anti-spoof rules reject `"name (foo@gmail.com)" <chatbot@zing-work.com>`
+            # as a phishing pattern. Customer email is preserved via reply_to
+            # and the X-Customer-Email header below.
+            display_name = customer_name if (customer_name and customer_name != "Guest") else "Zing Customer Support"
             sender_display = formataddr((display_name, SMTP2GO_SENDER))
 
             payload = {
                 "api_key": SMTP2GO_API_KEY,
                 "sender": sender_display,
                 "to": [SUPPORT_INBOX],
+                "reply_to": customer_email,
                 "subject": email_subject,
                 "html_body": html_body,
                 "text_body": plain_body,
                 "custom_headers": [
                     {"header": "X-Customer-Email", "value": customer_email},
                     {"header": "X-Priority", "value": priority},
-                    {"header": "Reply-To", "value": customer_email},
                 ]
             }
 
@@ -225,6 +220,29 @@ class HubSpotTicketManager:
                 )
                 response.raise_for_status()
                 result = response.json()
+
+            # SMTP2GO returns HTTP 200 even when it rejects the message —
+            # the real outcome lives in result["data"]["failed"]. Without
+            # this check the bot logs success and silently drops mail.
+            failed_count = result.get("data", {}).get("failed", 0) or 0
+            if failed_count > 0:
+                failures = result.get("data", {}).get("failures", [])
+                print(f"[ERROR] SMTP2GO rejected message: {customer_email} - {email_subject} - failures: {failures}")
+                return self._log_ticket_creation(
+                    customer_email=customer_email,
+                    subject=subject,
+                    description=description,
+                    priority=priority,
+                    conversation_transcript=conversation_transcript,
+                    customer_name=customer_name,
+                    mood_score=mood_score,
+                    mood_reason=mood_reason,
+                    urgency_score=urgency_score,
+                    urgency_reason=urgency_reason,
+                    complexity_score=complexity_score,
+                    complexity_reason=complexity_reason,
+                    cancellation_reason=cancellation_reason,
+                )
 
             print(f"[EMAIL] Ticket sent: {customer_email} - {email_subject}")
 
